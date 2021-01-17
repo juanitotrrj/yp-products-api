@@ -34,14 +34,7 @@ class ProductService
 
     public function create(array $attributes)
     {
-        $urlSegment = Str::slug($attributes['url_segment'], '-');
-        $numberOfSimilarUrlSegments = Product::where('url_segment', 'like', "{$urlSegment}%")->count();
-        if ($numberOfSimilarUrlSegments > 0) {
-            $numberOfSimilarUrlSegments++;
-            $urlSegment .= "-{$numberOfSimilarUrlSegments}";
-        }
-
-        $attributes['url_segment'] = $urlSegment;
+        $attributes['url_segment'] = $this->getUrlSegment($attributes);
 
         return Product::create($attributes);
     }
@@ -54,10 +47,24 @@ class ProductService
 
     public function update($productId, array $attributes)
     {
+        $attributes['url_segment'] = $this->getUrlSegment($attributes);
+
         $product = Product::find($productId);
         $product->update($attributes);
         $product->refresh();
 
         return $product;
+    }
+
+    private function getUrlSegment($attributes)
+    {
+        $urlSegment = Str::slug($attributes['url_segment'], '-');
+        $numberOfSimilarUrlSegments = Product::where('url_segment', 'like', "{$urlSegment}%")->count();
+        if ($numberOfSimilarUrlSegments > 0) {
+            $numberOfSimilarUrlSegments++;
+            $urlSegment .= "-{$numberOfSimilarUrlSegments}";
+        }
+
+        return $urlSegment;
     }
 }
