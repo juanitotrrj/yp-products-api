@@ -1,5 +1,8 @@
 # Products API
 
+## Requirements
+- `docker`
+
 ## Installation
 1. Clone the repository
    ```bash
