@@ -350,6 +350,63 @@
                     }
                 }
             }
+        },
+        "/api/v1/products/url_segment/{url_segment}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get Product by URL Segment",
+                "description": "Get Product by URL Segment. Returns Product details",
+                "operationId": "",
+                "parameters": [
+                    {
+                        "name": "url_segment",
+                        "in": "path",
+                        "description": "Product URL Segment",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "name": "FooBar DDR4 RAM 3200Mhz",
+                                        "url_segment": "foobar-ddr4-ram-3200mhz",
+                                        "sku": "32424234234",
+                                        "price": 7200,
+                                        "created_at": "2021-01-17 18:21:22",
+                                        "updated_at": "2021-01-17 18:21:22"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "errors": {
+                                        "url_segment": [
+                                            "The url_segment must be a string."
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {

@@ -19,4 +19,5 @@ Route::prefix('v1')->group(function () {
     Route::apiResources([
         'products' => ProductController::class,
     ]);
+    Route::get('products/url_segment/{url_segment}', [ProductController::class, 'showByUrlSegment']);
 });

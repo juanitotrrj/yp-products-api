@@ -123,9 +123,9 @@ class ProductController extends Controller
         $validator = Validator::make($attributes, [
             'page' => 'integer',
             'per_page' => 'integer',
-            'filter.name' => 'string',
-            'filter.url_segment' => 'string',
-            'filter.sku' => 'integer',
+            'filter.name' => 'nullable|string',
+            'filter.url_segment' => 'nullable|string',
+            'filter.sku' => 'nullable|integer',
         ]);
 
         if ($validator->fails()) {
@@ -322,6 +322,74 @@ class ProductController extends Controller
 
         return [
             'data' => $this->productService->get($productId)->toArray(),
+        ];
+    }
+
+    /**
+     * @OA\Get(
+     *      path="/api/v1/products/url_segment/{url_segment}",
+     *      summary="Get Product by URL Segment",
+     *      tags={"Products"},
+     *      description="Get Product by URL Segment. Returns Product details",
+     *      operationId="",
+     *      @OA\Parameter(
+     *          name="url_segment",
+     *          description="Product URL Segment",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=Symfony\Component\HttpFoundation\Response::HTTP_OK,
+     *          description="successful operation",
+     *          @OA\JsonContent(
+     *             example={
+     *                 "data": {
+     *                     "id": 1,
+     *                     "name": "FooBar DDR4 RAM 3200Mhz",
+     *                     "url_segment": "foobar-ddr4-ram-3200mhz",
+     *                     "sku": "32424234234",
+     *                     "price": 7200.00,
+     *                     "created_at": "2021-01-17 18:21:22",
+     *                     "updated_at": "2021-01-17 18:21:22"
+     *                 },
+     *             }
+     *          )
+     *       ),
+     *       @OA\Response(
+     *          response=Symfony\Component\HttpFoundation\Response::HTTP_UNPROCESSABLE_ENTITY,
+     *          description="Unprocessable Entity",
+     *          @OA\JsonContent(
+     *             example={
+     *                 "errors": {
+     *                     "url_segment": {
+     *                          "The url_segment must be a string.",
+     *                     },
+     *                 },
+     *             }
+     *          )
+     *       ),
+     *     )
+     */
+    public function showByUrlSegment($urlSegment)
+    {
+        $validator = Validator::make(['url_segment' => $urlSegment], [
+            'url_segment' => 'string|exists:products,url_segment',
+        ]);
+
+        if ($validator->fails()) {
+            return response(
+                [
+                    'errors' => $validator->errors()->getMessages()
+                ],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+
+        return [
+            'data' => $this->productService->getByUrlSegment($urlSegment)->toArray(),
         ];
     }
 

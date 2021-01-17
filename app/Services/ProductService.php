@@ -32,6 +32,11 @@ class ProductService
         return Product::find($id);
     }
 
+    public function getByUrlSegment($urlSegment)
+    {
+        return Product::where('url_segment', $urlSegment)->first();
+    }
+
     public function create(array $attributes)
     {
         $attributes['url_segment'] = $this->getUrlSegment($attributes);
